@@ -1,0 +1,3 @@
+User: admin, is_responsable: False, Status: 200
+User: testuser, is_responsable: False, Status: 200
+User: amar, is_responsable: False, Status: 200

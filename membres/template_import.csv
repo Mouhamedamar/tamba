@@ -1,0 +1,3 @@
+nom,prenom,telephone,quartier,cellule,role,numero_identification,inscrit_liste_electorale,numero_carte_electeur,centre_vote,bureau_vote,optin_pastef_infos
+Diallo,Ali,22176543210,Pikine,1,militant,ID001,true,CARTE123456,Centre A,Bureau 1,true
+Fall,Fatou,22176543211,Guédiawaye,2,responsable,ID002,false,CARTE789012,Centre B,Bureau 2,false
