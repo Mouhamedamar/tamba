@@ -1,1 +1,1 @@
-web: gunicorn tamba_politique.wsgi --log-file -
+web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn tamba_politique.wsgi --log-file -
