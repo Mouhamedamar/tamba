@@ -2,21 +2,22 @@ import { useEffect, useState, lazy, Suspense } from 'react'
 import { getDashboard } from '../services/api'
 import Loader from '../components/Loader'
 import { Users, Building2, TrendingUp, UserCheck, Vote, MapPin, Award, BarChart2 } from 'lucide-react'
+import logo from '../assets/logo.svg'
 
 const DashboardCharts = lazy(() => import('../components/DashboardCharts'))
 
 const StatCard = ({ icon: Icon, label, value, color, sub, trend }) => (
-  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+  <div className="rounded-2xl border border-white/15 p-5 flex items-center gap-4 hover:border-white/25 transition-all" style={{backgroundColor:'rgba(0,0,0,0.35)', backdropFilter:'blur(16px)'}}>
     <div className={"w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 " + color}>
       <Icon size={22} className="text-white" />
     </div>
     <div className="min-w-0">
-      <p className="text-sm text-gray-500 truncate">{label}</p>
-      <p className="text-2xl font-black text-gray-800 leading-tight">{value ?? '—'}</p>
-      {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+      <p className="text-sm text-white/60 truncate">{label}</p>
+      <p className="text-2xl font-black text-white leading-tight">{value ?? '—'}</p>
+      {sub && <p className="text-xs text-white/40 mt-0.5">{sub}</p>}
     </div>
     {trend !== undefined && (
-      <div className={"ml-auto text-xs font-bold px-2 py-1 rounded-full flex-shrink-0 " + (trend >= 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700")}>
+      <div className={"ml-auto text-xs font-bold px-2 py-1 rounded-full flex-shrink-0 " + (trend >= 0 ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400")}>
         {trend >= 0 ? "+" : ""}{trend}%
       </div>
     )}
@@ -68,18 +69,24 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-black text-gray-800">
-            {isAdmin ? 'Dashboard Global' : data?.user_cellule ? "Dashboard - " + data.user_cellule : 'Mon Dashboard'}
-          </h1>
-          <p className="text-gray-500 text-sm mt-1">
-            {isAdmin ? "Vue d ensemble de toute l organisation" : "Bienvenue, " + (data?.user_name || 'Utilisateur')}
-          </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          {/* Logo */}
+          <div className="w-14 h-14 bg-white rounded-2xl shadow-lg border border-white/20 p-2 flex items-center justify-center flex-shrink-0">
+            <img src={logo} alt="Tamba Politique" className="w-full h-full object-contain" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-black text-white">
+              {isAdmin ? 'Dashboard Global' : data?.user_cellule ? "Dashboard - " + data.user_cellule : 'Mon Dashboard'}
+            </h1>
+            <p className="text-white/60 text-sm mt-0.5">
+              {isAdmin ? "Vue d ensemble de toute l organisation" : "Bienvenue, " + (data?.user_name || 'Utilisateur')}
+            </p>
+          </div>
         </div>
-        <div className="hidden sm:flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-3 py-2">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          <span className="text-xs font-medium text-green-700">En direct</span>
+        <div className="hidden sm:flex items-center gap-2 bg-white/10 border border-white/20 rounded-xl px-3 py-2">
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+          <span className="text-xs font-medium text-white/80">En direct</span>
         </div>
       </div>
 

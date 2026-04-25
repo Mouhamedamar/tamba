@@ -212,8 +212,8 @@ export default function Cellules() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-white/15" style={{backgroundColor:'rgba(10,20,15,0.97)'}}>
             <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-t-2xl p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -226,51 +226,44 @@ export default function Cellules() {
                 <button onClick={() => setShowModal(false)} className="text-white/70 hover:text-white"><X size={20} /></button>
               </div>
             </div>
-
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Nom <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-white/80 mb-1.5">Nom <span className="text-red-400">*</span></label>
                 <input className="input-field" value={form.nom_cellule} onChange={(e) => setForm({ ...form, nom_cellule: e.target.value })} required placeholder="Ex: Cellule Centre" />
-                {errors.nom_cellule && <p className="text-red-500 text-xs mt-1">{Array.isArray(errors.nom_cellule) ? errors.nom_cellule[0] : errors.nom_cellule}</p>}
+                {errors.nom_cellule && <p className="text-red-400 text-xs mt-1">{Array.isArray(errors.nom_cellule) ? errors.nom_cellule[0] : errors.nom_cellule}</p>}
               </div>
-
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Quartier</label>
+                  <label className="block text-sm font-medium text-white/80 mb-1.5">Quartier</label>
                   <input className="input-field" value={form.quartier} onChange={(e) => setForm({ ...form, quartier: e.target.value })} placeholder="Quartier" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Commune</label>
+                  <label className="block text-sm font-medium text-white/80 mb-1.5">Commune</label>
                   <input className="input-field" value={form.commune} onChange={(e) => setForm({ ...form, commune: e.target.value })} placeholder="Commune" />
                 </div>
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Departement</label>
+                <label className="block text-sm font-medium text-white/80 mb-1.5">Departement</label>
                 <input className="input-field" value={form.departement} onChange={(e) => setForm({ ...form, departement: e.target.value })} placeholder="Tambacounda" />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Responsable</label>
+                <label className="block text-sm font-medium text-white/80 mb-1.5">Responsable</label>
                 <select className="input-field" value={form.responsable ?? ""} onChange={(e) => setForm({ ...form, responsable: e.target.value ? parseInt(e.target.value) : null })}>
-                  <option value="">-- Selectionner un responsable --</option>
-                  {responsables.map((r) => <option key={r.id} value={r.id}>{r.prenom} {r.nom}</option>)}
+                  <option value="" style={{backgroundColor:'#0a1410'}}>-- Selectionner --</option>
+                  {responsables.map((r) => <option key={r.id} value={r.id} style={{backgroundColor:'#0a1410'}}>{r.prenom} {r.nom}</option>)}
                 </select>
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Description</label>
+                <label className="block text-sm font-medium text-white/80 mb-1.5">Description</label>
                 <textarea className="input-field resize-none" rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description..." />
               </div>
-
               <div className="flex items-center gap-3 cursor-pointer" onClick={() => setForm({ ...form, actif: !form.actif })}>
-                <div className={"relative w-11 h-6 rounded-full transition-colors duration-200 " + (form.actif ? "bg-green-500" : "bg-gray-300")}>
+                <div className={"relative w-11 h-6 rounded-full transition-colors duration-200 " + (form.actif ? "bg-green-500" : "bg-white/20")}>
                   <div className={"absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 " + (form.actif ? "translate-x-5" : "")} />
                 </div>
-                <span className="text-sm font-medium text-gray-700">{form.actif ? "Cellule active" : "Cellule inactive"}</span>
+                <span className="text-sm font-medium text-white/80">{form.actif ? "Cellule active" : "Cellule inactive"}</span>
               </div>
-
-              <div className="flex gap-3 justify-end pt-2 border-t border-gray-100">
+              <div className="flex gap-3 justify-end pt-2 border-t border-white/10">
                 <button type="button" onClick={() => setShowModal(false)} className="btn-secondary" disabled={saving}>Annuler</button>
                 <button type="submit" className="btn-primary flex items-center gap-2" disabled={saving}>
                   {saving && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}

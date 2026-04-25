@@ -307,8 +307,8 @@ export default function Membres() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-white/15" style={{backgroundColor: 'rgba(10,20,15,0.97)'}}>
             <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-t-2xl p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -325,32 +325,32 @@ export default function Membres() {
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               {/* Identite */}
               <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><User size={13} /> Identite</p>
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3 flex items-center gap-2"><User size={13} /> Identite</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Prenom <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">Prenom <span className="text-red-400">*</span></label>
                     <input className="input-field" placeholder="Prenom" value={form.prenom} onChange={e => setForm({ ...form, prenom: e.target.value })} required />
-                    {errors.prenom && <p className="text-red-500 text-xs mt-1">{Array.isArray(errors.prenom) ? errors.prenom[0] : errors.prenom}</p>}
+                    {errors.prenom && <p className="text-red-400 text-xs mt-1">{Array.isArray(errors.prenom) ? errors.prenom[0] : errors.prenom}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Nom <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">Nom <span className="text-red-400">*</span></label>
                     <input className="input-field" placeholder="Nom" value={form.nom} onChange={e => setForm({ ...form, nom: e.target.value })} required />
-                    {errors.nom && <p className="text-red-500 text-xs mt-1">{Array.isArray(errors.nom) ? errors.nom[0] : errors.nom}</p>}
+                    {errors.nom && <p className="text-red-400 text-xs mt-1">{Array.isArray(errors.nom) ? errors.nom[0] : errors.nom}</p>}
                   </div>
                 </div>
               </div>
 
               {/* Contact & Localisation */}
               <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><Phone size={13} /> Contact et Localisation</p>
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3 flex items-center gap-2"><Phone size={13} /> Contact et Localisation</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Telephone <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">Telephone <span className="text-red-400">*</span></label>
                     <input className="input-field" placeholder="77 123 45 67" value={form.telephone} onChange={e => setForm({ ...form, telephone: e.target.value })} required />
-                    {errors.telephone && <p className="text-red-500 text-xs mt-1">{Array.isArray(errors.telephone) ? errors.telephone[0] : errors.telephone}</p>}
+                    {errors.telephone && <p className="text-red-400 text-xs mt-1">{Array.isArray(errors.telephone) ? errors.telephone[0] : errors.telephone}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Quartier <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">Quartier <span className="text-red-400">*</span></label>
                     <input className="input-field" placeholder="Quartier" value={form.quartier} onChange={e => setForm({ ...form, quartier: e.target.value })} required />
                   </div>
                 </div>
@@ -358,20 +358,20 @@ export default function Membres() {
 
               {/* Cellule & Role */}
               <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><Building2 size={13} /> Cellule et Role</p>
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3 flex items-center gap-2"><Building2 size={13} /> Cellule et Role</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Cellule <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">Cellule <span className="text-red-400">*</span></label>
                     <select className="input-field" value={form.cellule} onChange={e => setForm({ ...form, cellule: e.target.value })} required>
-                      <option value="">-- Choisir --</option>
-                      {cellules.map(c => <option key={c.id} value={c.id}>{c.nom_cellule}</option>)}
+                      <option value="" style={{backgroundColor:'#0a1410'}}>-- Choisir --</option>
+                      {cellules.map(c => <option key={c.id} value={c.id} style={{backgroundColor:'#0a1410'}}>{c.nom_cellule}</option>)}
                     </select>
-                    {errors.cellule && <p className="text-red-500 text-xs mt-1">{Array.isArray(errors.cellule) ? errors.cellule[0] : errors.cellule}</p>}
+                    {errors.cellule && <p className="text-red-400 text-xs mt-1">{Array.isArray(errors.cellule) ? errors.cellule[0] : errors.cellule}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Role</label>
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">Role</label>
                     <select className="input-field" value={form.role} onChange={e => setForm({ ...form, role: e.target.value })}>
-                      {ROLE_CHOICES.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
+                      {ROLE_CHOICES.map(r => <option key={r.value} value={r.value} style={{backgroundColor:'#0a1410'}}>{r.label}</option>)}
                     </select>
                   </div>
                 </div>
@@ -379,41 +379,41 @@ export default function Membres() {
 
               {/* Identification */}
               <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><CreditCard size={13} /> Identification</p>
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3 flex items-center gap-2"><CreditCard size={13} /> Identification</p>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">N Identification (CNI/BIR)</label>
+                  <label className="block text-sm font-medium text-white/80 mb-1.5">N Identification (CNI/BIR)</label>
                   <input className="input-field" placeholder="Numero CNI ou BIR" value={form.numero_identification} onChange={e => setForm({ ...form, numero_identification: e.target.value })} />
                 </div>
               </div>
 
               {/* Liste electorale */}
-              <div className="bg-gray-50 rounded-xl p-4 space-y-4">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2"><CheckCircle2 size={13} /> Liste Electorale</p>
+              <div className="rounded-xl p-4 space-y-4 border border-white/10" style={{backgroundColor:'rgba(255,255,255,0.05)'}}>
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wider flex items-center gap-2"><CheckCircle2 size={13} /> Liste Electorale</p>
                 <div className="flex items-center gap-3 cursor-pointer" onClick={() => setForm({ ...form, inscrit_liste_electorale: !form.inscrit_liste_electorale })}>
-                  <div className={"relative w-11 h-6 rounded-full transition-colors duration-200 " + (form.inscrit_liste_electorale ? "bg-green-500" : "bg-gray-300")}>
+                  <div className={"relative w-11 h-6 rounded-full transition-colors duration-200 " + (form.inscrit_liste_electorale ? "bg-green-500" : "bg-white/20")}>
                     <div className={"absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 " + (form.inscrit_liste_electorale ? "translate-x-5" : "")} />
                   </div>
-                  <span className="text-sm font-medium text-gray-700">{form.inscrit_liste_electorale ? "Inscrit sur la liste electorale" : "Non inscrit sur la liste electorale"}</span>
+                  <span className="text-sm font-medium text-white/80">{form.inscrit_liste_electorale ? "Inscrit sur la liste electorale" : "Non inscrit sur la liste electorale"}</span>
                 </div>
                 {form.inscrit_liste_electorale && (
                   <div className="space-y-3 pt-2">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">N Carte electeur</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">N Carte electeur</label>
                         <input className="input-field" placeholder="Numero carte" value={form.numero_carte_electeur} onChange={e => setForm({ ...form, numero_carte_electeur: e.target.value })} />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Date expiration</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">Date expiration</label>
                         <input type="date" className="input-field" value={form.date_expiration_carte} onChange={e => setForm({ ...form, date_expiration_carte: e.target.value })} />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Centre de vote</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">Centre de vote</label>
                         <input className="input-field" placeholder="Ex: Lycee Cheikh Anta Diop" value={form.centre_vote} onChange={e => setForm({ ...form, centre_vote: e.target.value })} />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Bureau de vote</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">Bureau de vote</label>
                         <input className="input-field" placeholder="Bureau n X" value={form.bureau_vote} onChange={e => setForm({ ...form, bureau_vote: e.target.value })} />
                       </div>
                     </div>
@@ -423,13 +423,13 @@ export default function Membres() {
 
               {/* Optin */}
               <div className="flex items-center gap-3 cursor-pointer" onClick={() => setForm({ ...form, optin_pastef_infos: !form.optin_pastef_infos })}>
-                <div className={"relative w-11 h-6 rounded-full transition-colors duration-200 " + (form.optin_pastef_infos ? "bg-green-500" : "bg-gray-300")}>
+                <div className={"relative w-11 h-6 rounded-full transition-colors duration-200 " + (form.optin_pastef_infos ? "bg-green-500" : "bg-white/20")}>
                   <div className={"absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 " + (form.optin_pastef_infos ? "translate-x-5" : "")} />
                 </div>
-                <span className="text-sm font-medium text-gray-700">Recevoir infos PASTEF et elections</span>
+                <span className="text-sm font-medium text-white/80">Recevoir infos PASTEF et elections</span>
               </div>
 
-              <div className="flex gap-3 justify-end pt-2 border-t border-gray-100">
+              <div className="flex gap-3 justify-end pt-2 border-t border-white/10">
                 <button type="button" onClick={() => setShowModal(false)} className="btn-secondary">Annuler</button>
                 <button type="submit" disabled={saving} className="btn-primary flex items-center gap-2">
                   {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <CheckCircle2 size={16} />}

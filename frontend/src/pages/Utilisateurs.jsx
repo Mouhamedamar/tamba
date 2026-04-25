@@ -205,8 +205,8 @@ export default function Utilisateurs() {
 
       {/* Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border border-white/15" style={{backgroundColor:'rgba(10,20,15,0.97)'}}>
             <div className="bg-gradient-to-r from-slate-700 to-slate-900 rounded-t-2xl p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -219,79 +219,72 @@ export default function Utilisateurs() {
                 <button onClick={() => setModalOpen(false)} className="text-white/70 hover:text-white"><X size={20} /></button>
               </div>
             </div>
-
             <form onSubmit={handleSubmit} className="p-6 space-y-5">
-              {/* Identite */}
               <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><User size={13} /> Identite</p>
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3 flex items-center gap-2"><User size={13} /> Identite</p>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Prenom</label>
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">Prenom</label>
                     <input className="input-field" value={form.first_name} onChange={e => setForm({ ...form, first_name: e.target.value })} placeholder="Prenom" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Nom</label>
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">Nom</label>
                     <input className="input-field" value={form.last_name} onChange={e => setForm({ ...form, last_name: e.target.value })} placeholder="Nom" />
                   </div>
                 </div>
               </div>
-
-              {/* Compte */}
               <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><ShieldCheck size={13} /> Compte</p>
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3 flex items-center gap-2"><ShieldCheck size={13} /> Compte</p>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Nom d utilisateur <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">Nom d utilisateur <span className="text-red-400">*</span></label>
                     <input className="input-field" value={form.username} onChange={e => setForm({ ...form, username: e.target.value })} required placeholder="username" />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">Role <span className="text-red-500">*</span></label>
+                      <label className="block text-sm font-medium text-white/80 mb-1.5">Role <span className="text-red-400">*</span></label>
                       <select className="input-field" value={form.role} onChange={e => setForm({ ...form, role: e.target.value })}>
-                        <option value="admin">Administrateur</option>
-                        <option value="responsable">Responsable</option>
-                        <option value="agent">Agent</option>
+                        <option value="admin" style={{backgroundColor:'#0a1410'}}>Administrateur</option>
+                        <option value="responsable" style={{backgroundColor:'#0a1410'}}>Responsable</option>
+                        <option value="agent" style={{backgroundColor:'#0a1410'}}>Agent</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">Cellule</label>
+                      <label className="block text-sm font-medium text-white/80 mb-1.5">Cellule</label>
                       <select className="input-field" value={form.cellule} onChange={e => setForm({ ...form, cellule: e.target.value })}>
-                        <option value="">Aucune</option>
-                        {cellules.map(c => <option key={c.id} value={c.id}>{c.nom_cellule}</option>)}
+                        <option value="" style={{backgroundColor:'#0a1410'}}>Aucune</option>
+                        {cellules.map(c => <option key={c.id} value={c.id} style={{backgroundColor:'#0a1410'}}>{c.nom_cellule}</option>)}
                       </select>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+                      <label className="block text-sm font-medium text-white/80 mb-1.5">Email</label>
                       <input type="email" className="input-field" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="email@exemple.com" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">Telephone</label>
+                      <label className="block text-sm font-medium text-white/80 mb-1.5">Telephone</label>
                       <input className="input-field" value={form.telephone} onChange={e => setForm({ ...form, telephone: e.target.value })} placeholder="77 XXX XX XX" />
                     </div>
                   </div>
                 </div>
               </div>
-
-              {/* Mot de passe */}
-              <div className="bg-gray-50 rounded-xl p-4 space-y-3">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <div className="rounded-xl p-4 space-y-3 border border-white/10" style={{backgroundColor:'rgba(255,255,255,0.05)'}}>
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wider">
                   {editingUser ? 'Changer le mot de passe (laisser vide pour ne pas changer)' : 'Mot de passe'}
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{editingUser ? 'Nouveau' : 'Mot de passe'} {!editingUser && <span className="text-red-500">*</span>}</label>
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">{editingUser ? 'Nouveau' : 'Mot de passe'} {!editingUser && <span className="text-red-400">*</span>}</label>
                     <input type="password" className="input-field" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required={!editingUser} />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Confirmer {!!form.password && <span className="text-red-500">*</span>}</label>
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">Confirmer {!!form.password && <span className="text-red-400">*</span>}</label>
                     <input type="password" className="input-field" value={form.password_confirm} onChange={e => setForm({ ...form, password_confirm: e.target.value })} required={!!form.password} />
                   </div>
                 </div>
               </div>
-
-              <div className="flex gap-3 justify-end pt-2 border-t border-gray-100">
+              <div className="flex gap-3 justify-end pt-2 border-t border-white/10">
                 <button type="button" onClick={() => setModalOpen(false)} className="btn-secondary">Annuler</button>
                 <button type="submit" disabled={saving} className="btn-primary flex items-center gap-2">
                   {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <CheckCircle2 size={16} />}

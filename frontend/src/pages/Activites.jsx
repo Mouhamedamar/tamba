@@ -210,8 +210,8 @@ export default function Activites() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border border-white/15" style={{backgroundColor: 'rgba(10,20,15,0.97)'}}>
             <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-t-2xl p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -227,39 +227,39 @@ export default function Activites() {
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Titre <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-white/80 mb-1.5">Titre <span className="text-red-400">*</span></label>
                 <input className="input-field" placeholder="Titre de l activite" value={form.titre} onChange={e => setForm({ ...form, titre: e.target.value })} required />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Description</label>
+                <label className="block text-sm font-medium text-white/80 mb-1.5">Description</label>
                 <textarea className="input-field resize-none" rows={3} placeholder="Description..." value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Date debut <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-white/80 mb-1.5">Date debut <span className="text-red-400">*</span></label>
                   <input type="datetime-local" className="input-field" value={form.date_debut} onChange={e => setForm({ ...form, date_debut: e.target.value })} required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Date fin</label>
+                  <label className="block text-sm font-medium text-white/80 mb-1.5">Date fin</label>
                   <input type="datetime-local" className="input-field" value={form.date_fin} onChange={e => setForm({ ...form, date_fin: e.target.value })} />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Lieu</label>
+                <label className="block text-sm font-medium text-white/80 mb-1.5">Lieu</label>
                 <input className="input-field" placeholder="Ex: Salle des fetes, Tambacounda" value={form.lieu} onChange={e => setForm({ ...form, lieu: e.target.value })} />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Statut</label>
+                <label className="block text-sm font-medium text-white/80 mb-1.5">Statut</label>
                 <select className="input-field" value={form.statut} onChange={e => setForm({ ...form, statut: e.target.value })}>
-                  {Object.entries(STATUT_CONFIG).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+                  {Object.entries(STATUT_CONFIG).map(([k, v]) => <option key={k} value={k} style={{backgroundColor:'#0a1410'}}>{v.label}</option>)}
                 </select>
               </div>
 
-              <div className="flex gap-3 justify-end pt-2 border-t border-gray-100">
+              <div className="flex gap-3 justify-end pt-2 border-t border-white/10">
                 <button type="button" onClick={() => setShowModal(false)} className="btn-secondary">Annuler</button>
                 <button type="submit" disabled={saving} className="btn-primary flex items-center gap-2">
                   {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <CheckCircle2 size={16} />}
