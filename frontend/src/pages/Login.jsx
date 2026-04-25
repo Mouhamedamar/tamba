@@ -41,9 +41,9 @@ export default function Login() {
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
               <span className="text-sm font-medium text-white/80">Plateforme officielle PASTEF</span>
             </div>
-            <h2 className="text-4xl font-black leading-tight mb-4">
+            <h2 className="text-5xl font-black leading-tight mb-4">
               Bienvenue sur<br />
-              <span className="text-green-400">Tamba PASTEF</span>
+              <span className="text-green-400">Tamba PASTEF Focus</span>
             </h2>
             <p className="text-white/60 text-base leading-relaxed max-w-sm">
               La plateforme de gestion des militants, cellules et activites du PASTEF a Tambacounda.
