@@ -38,11 +38,15 @@ export default function Dashboard() {
   if (loading) return <Loader />
 
   const isAdmin = data?.user_role === 'admin'
-  const cellulesLabels = data?.membres_par_cellule?.map((c) => c.cellule__nom_cellule || 'Sans cellule') ?? []
-  const cellulesValues = data?.membres_par_cellule?.map((c) => c.count ?? 0) ?? []
-  const cellulesColors = data?.membres_par_cellule?.map((c) => c.cellule__couleur || '#16a34a') ?? []
-  const evolutionLabels = data?.evolution_inscriptions?.map((e) => e.date) ?? []
-  const evolutionValues = data?.evolution_inscriptions?.map((e) => e.count ?? 0) ?? []
+  const membresParCellule = Array.isArray(data?.membres_par_cellule) ? data.membres_par_cellule : []
+  const evolutionInscriptions = Array.isArray(data?.evolution_inscriptions) ? data.evolution_inscriptions : []
+  const topQuartiers = Array.isArray(data?.top_quartiers) ? data.top_quartiers : []
+
+  const cellulesLabels = membresParCellule.map((c) => c.cellule__nom_cellule || 'Sans cellule')
+  const cellulesValues = membresParCellule.map((c) => c.count ?? 0)
+  const cellulesColors = membresParCellule.map((c) => c.cellule__couleur || '#16a34a')
+  const evolutionLabels = evolutionInscriptions.map((e) => e.date)
+  const evolutionValues = evolutionInscriptions.map((e) => e.count ?? 0)
 
   const barData = {
     labels: cellulesLabels,
@@ -107,13 +111,13 @@ export default function Dashboard() {
       </div>
 
       {/* Top quartiers */}
-      {isAdmin && data?.top_quartiers?.length > 0 && (
+      {isAdmin && topQuartiers.length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
           <h2 className="text-base font-bold text-gray-700 mb-4 flex items-center gap-2">
             <MapPin size={16} className="text-green-600" /> Top quartiers
           </h2>
           <div className="space-y-3">
-            {data.top_quartiers.map((q, i) => {
+            {topQuartiers.map((q, i) => {
               const max = data.top_quartiers[0]?.count || 1
               const pct = Math.round((q.count / max) * 100)
               return (
