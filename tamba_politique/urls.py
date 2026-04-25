@@ -1,4 +1,4 @@
-"""
+﻿"""
 URL configuration for tamba_politique project.
 """
 from django.contrib import admin
@@ -25,6 +25,8 @@ urlpatterns = [
     path('api/', include('cellules.urls')),
     path('api/', include('membres.urls')),
     path('api/dashboard/', include('membres.dashboard_urls')),
+    path('api/', include('primo_votants.urls')),
+    path('api/', include('activites.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

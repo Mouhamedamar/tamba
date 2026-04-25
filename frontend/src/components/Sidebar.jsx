@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Users, Building2, LogOut, Menu, X, ShieldAlert } from 'lucide-react'
+import { LayoutDashboard, Users, Building2, LogOut, Menu, X, ShieldAlert, Vote, Calendar } from 'lucide-react'
 import { clearTokens } from '../utils/auth'
 import { getMe } from '../services/api'
 import logo from '../assets/logo.svg'
@@ -9,6 +9,8 @@ const baseLinks = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/membres', label: 'Membres', icon: Users },
   { to: '/cellules', label: 'Cellules', icon: Building2 },
+  { to: '/primo-votants', label: 'Primo Votants', icon: Vote },
+  { to: '/activites', label: 'Nos Activites', icon: Calendar },
 ]
 
 export default function Sidebar() {
@@ -37,11 +39,11 @@ export default function Sidebar() {
     <>
       <div className="flex items-center gap-4 px-6 py-7 border-b border-white/10">
         <div className="relative rounded-[28px] bg-white p-3 shadow-[0_18px_50px_-30px_rgba(255,255,255,0.95)]">
-          <img src={logo} alt="Sonko Président 2029" className="h-16 w-16 object-contain" />
+          <img src={logo} alt="Sonko PrÃ©sident 2029" className="h-16 w-16 object-contain" />
           <span className="absolute -bottom-1 -right-1 inline-flex h-3 w-3 rounded-full bg-lime-400 ring-2 ring-white" />
         </div>
         <div>
-          <p className="text-white font-extrabold text-lg leading-tight">Sonko Président</p>
+          <p className="text-white font-extrabold text-lg leading-tight">Sonko PrÃ©sident</p>
           <p className="text-emerald-200 text-sm">Portail de gestion</p>
         </div>
       </div>
@@ -76,7 +78,7 @@ export default function Sidebar() {
           className="flex items-center gap-3 w-full px-5 py-3 rounded-3xl bg-white/10 text-base font-semibold text-white hover:bg-white/20 transition duration-200"
         >
           <LogOut size={18} />
-          Déconnexion
+          DÃ©connexion
         </button>
       </div>
     </>
@@ -88,10 +90,10 @@ export default function Sidebar() {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800 flex items-center justify-between px-4 py-3 shadow-xl">
         <div className="flex items-center gap-3">
           <div className="rounded-3xl bg-white p-1 shadow-md">
-            <img src={logo} alt="Sonko Président 2029" className="h-10 w-10 object-contain" />
+            <img src={logo} alt="Sonko PrÃ©sident 2029" className="h-10 w-10 object-contain" />
           </div>
           <div>
-            <p className="text-white text-sm font-semibold leading-tight">Sonko Président</p>
+            <p className="text-white text-sm font-semibold leading-tight">Sonko PrÃ©sident</p>
             <p className="text-emerald-300 text-[11px] uppercase tracking-[0.2em]">Menu vertical</p>
           </div>
         </div>
@@ -124,3 +126,5 @@ export default function Sidebar() {
     </>
   )
 }
+
+
