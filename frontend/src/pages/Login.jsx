@@ -43,7 +43,7 @@ export default function Login() {
             </div>
             <h2 className="text-5xl font-black leading-tight mb-4">
               Bienvenue sur<br />
-              <span className="text-green-400">Tamba PASTEF Focus</span>
+              <span className="text-green-400">PASTEF Tamba Focus</span>
             </h2>
             <p className="text-white/60 text-base leading-relaxed max-w-sm">
               La plateforme de gestion des militants, cellules et activites du PASTEF a Tambacounda.
