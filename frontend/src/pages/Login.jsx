@@ -96,7 +96,7 @@ export default function Login() {
                 <img src={logo} alt="Sonko Président 2029" className="h-full w-full object-contain" />
               </div>
             </div>
-            <h1 className="text-white text-4xl font-black tracking-tight drop-shadow-xl">Sonko Président 2029</h1>
+            <h1 className="text-white text-4xl font-black tracking-tight drop-shadow-xl">Pastef TAMBA focus</h1>
             <p className="text-emerald-100 text-base mt-3 font-semibold drop-shadow">Administration des membres et cellules</p>
           </div>
 
