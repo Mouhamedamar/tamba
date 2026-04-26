@@ -44,8 +44,10 @@ export default function Utilisateurs() {
     try {
       setLoading(true)
       const [uRes, cRes] = await Promise.all([getUsers(), getCellules()])
-      setUsers(uRes.data?.results || uRes.data || [])
-      setCellules(cRes.data?.results || cRes.data || [])
+      const uData = uRes.data?.results ?? uRes.data
+      const cData = cRes.data?.results ?? cRes.data
+      setUsers(Array.isArray(uData) ? uData : [])
+      setCellules(Array.isArray(cData) ? cData : [])
     } catch { toast.error('Erreur lors du chargement') }
     finally { setLoading(false) }
   }
