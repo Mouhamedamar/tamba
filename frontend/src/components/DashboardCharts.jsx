@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
   ArcElement,
+  Filler,
 } from 'chart.js'
 import { Bar, Doughnut, Line } from 'react-chartjs-2'
 
@@ -21,7 +22,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
+  Filler
 )
 
 export default function DashboardCharts({ barData, doughnutData, lineData, chartOptions, cellulesValues, evolutionValues }) {
