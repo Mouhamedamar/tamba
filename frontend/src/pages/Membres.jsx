@@ -54,7 +54,8 @@ export default function Membres() {
   const fetchAll = useCallback(async () => {
     try {
       const { data } = await getMembres({ page_size: 10000 })
-      setAllMembres(data.results ?? data)
+      const results = data.results ?? data
+      setAllMembres(Array.isArray(results) ? results : [])
     } catch {}
   }, [])
 
