@@ -7,7 +7,7 @@ import ConfirmModal from '../components/ConfirmModal'
 import toast from 'react-hot-toast'
 import { Plus, Pencil, Trash2, X, Calendar, MapPin, Clock, CheckCircle2, AlertCircle, XCircle, CalendarDays } from 'lucide-react'
 
-const BASE = '/api'
+const BASE = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL + '/api' : '/api'
 const h = () => ({ Authorization: `Bearer ${getToken()}` })
 const apiGet = (url) => axios.get(BASE + url, { headers: h() })
 const apiPost = (url, data) => axios.post(BASE + url, data, { headers: h() })
@@ -41,7 +41,8 @@ export default function Activites() {
     try {
       const params = filterStatut ? '?statut=' + filterStatut : ''
       const { data } = await apiGet('/activites/' + params)
-      setActivites(data.results ?? data)
+      const results = data.results ?? data
+      setActivites(Array.isArray(results) ? results : [])
     } catch { toast.error('Erreur chargement') }
     finally { setLoading(false) }
   }, [filterStatut])

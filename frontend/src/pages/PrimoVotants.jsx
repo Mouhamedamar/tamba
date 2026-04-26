@@ -9,7 +9,7 @@ import * as XLSX from "xlsx"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 
-const BASE = "/api"
+const BASE = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL + '/api' : '/api'
 const authHeader = () => ({ Authorization: `Bearer ${getToken()}` })
 const apiGet = (url) => axios.get(BASE + url, { headers: authHeader() })
 const apiPost = (url, data) => axios.post(BASE + url, data, { headers: authHeader() })
