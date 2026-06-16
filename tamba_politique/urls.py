@@ -9,6 +9,8 @@ from drf_yasg.views import get_schema_view
 
 from rest_framework.permissions import AllowAny
 
+from users.views import seed_admin
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Tamba Politique API",
@@ -21,6 +23,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('seed-admin/', seed_admin, name='seed-admin-root'),
     path('api/auth/', include('users.urls')),
     path('api/', include('cellules.urls')),
     path('api/', include('membres.urls')),
