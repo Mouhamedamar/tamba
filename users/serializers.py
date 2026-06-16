@@ -6,17 +6,36 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     """ Serializer pour la lecture/création des utilisateurs. """
-    cellule_nom = serializers.CharField(source='cellule.nom_cellule', read_only=True, allow_null=True)
-    role = serializers.SerializerMethodField()
+
+    # Champ en écriture pour permettre la modification du rôle via PATCH/PUT.
+    # (Même si get_role existe pour l'affichage, le rôle stocké reste `obj.role`.)
+    role = serializers.ChoiceField(choices=User.ROLE_CHOICES, required=False)
+
+    # Robustesse: certains users peuvent avoir cellule = NULL.
+    cellule_nom = serializers.SerializerMethodField(read_only=True)
+
     password = serializers.CharField(write_only=True, required=False, allow_blank=True)
+
+    # Optionnel: label lisible (utile si l'UI veut afficher admin/responsable/agent).
+    role_label = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'telephone', 'cellule', 'cellule_nom', 'date_joined', 'password']
+        fields = [
+            'id', 'username', 'email', 'first_name', 'last_name',
+            'role', 'role_label', 'telephone', 'cellule', 'cellule_nom',
+            'date_joined', 'password'
+        ]
         read_only_fields = ['id', 'date_joined']
 
-    def get_role(self, obj):
-        return 'admin' if obj.is_superuser else obj.role
+    def get_role_label(self, obj):
+        return 'admin' if obj.is_superuser else obj.get_role_display() if hasattr(obj, 'get_role_display') else obj.role
+
+    def get_cellule_nom(self, obj):
+        cellule = getattr(obj, 'cellule', None)
+        return getattr(cellule, 'nom_cellule', None) if cellule else None
+
+
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)

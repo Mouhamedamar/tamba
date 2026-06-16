@@ -93,7 +93,11 @@ export default function PrimoVotants() {
       setDeleteTarget(null)
       fetchList()
       fetchAll()
-    } catch { toast.error("Erreur suppression") }
+    } catch (err) { 
+      const data = err.response?.data
+      const msg = data?.detail || data?.error || "Erreur suppression"
+      toast.error(msg) 
+    }
   }
 
   const exportExcel = () => {

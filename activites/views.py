@@ -1,4 +1,6 @@
-from rest_framework import viewsets, filters
+from django.db.models import ProtectedError
+from rest_framework import viewsets, filters, status
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Activite
@@ -23,6 +25,16 @@ class ActiviteViewSet(viewsets.ModelViewSet):
     search_fields = ['titre', 'description', 'lieu']
     filterset_fields = ['statut']
     ordering_fields = ['date_debut', 'created_at']
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        try:
+            self.perform_destroy(instance)
+        except ProtectedError as e:
+            blocking_objs = [str(obj) for obj in e.protected_objects]
+            detail = f"Suppression impossible : cette activite est liee a des donnees ({', '.join(blocking_objs[:3])})."
+            return Response({"detail": detail}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def perform_create(self, serializer):
         serializer.save(cree_par=self.request.user)

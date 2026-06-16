@@ -1,3 +1,4 @@
+from django.db.models import ProtectedError
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -85,6 +86,38 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
+
+    def destroy(self, request, *args, **kwargs):
+        # Certains utilisateurs peuvent être liés à d’autres tables (membres, activités).
+        instance = self.get_object()
+        try:
+            self.perform_destroy(instance)
+        except ProtectedError as e:
+            # Erreur de contrainte FK explicite (on_delete=PROTECT)
+            blocking_objs = [str(obj) for obj in e.protected_objects]
+            detail = f"Suppression impossible : cet utilisateur est lié à des données ({', '.join(blocking_objs[:3])})."
+            return Response(
+                {
+                    "detail": detail,
+                    "error_type": "ProtectedError",
+                    "error": str(e),
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            # Toute autre erreur (DB, permission, etc.)
+            error_msg = str(e)
+            return Response(
+                {
+                    "detail": f"Erreur de suppression : {error_msg}",
+                    "error_type": e.__class__.__name__,
+                    "error": error_msg,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     search_fields = ['username', 'email', 'first_name', 'last_name']
     ordering_fields = ['date_joined', 'username', 'role']
     

@@ -29,13 +29,25 @@ export default function Sidebar() {
 
   useEffect(() => { setOpen(false) }, [location.pathname])
   useEffect(() => {
-    getMe().then(res => setUserRole(res.data.role)).catch(() => {})
+    getMe()
+      .then((res) => {
+        // backend: on attend res.data.role (admin/responsable/agent)
+        // et pour les superusers, le backend doit exposer 'admin'.
+        setUserRole(res.data.role)
+      })
+      .catch(() => {})
   }, [])
+
 
   const handleLogout = () => { clearTokens(); navigate('/login') }
 
   const links = [...baseLinks]
-  if (userRole === 'admin') links.push({ to: '/utilisateurs', label: 'Utilisateurs', icon: ShieldAlert })
+  // Afficher la page Utilisateurs si l'utilisateur a le rôle admin côté API.
+  // (corrige le cas où userRole peut être null au 1er rendu)
+  if (userRole === 'admin') {
+    links.push({ to: '/utilisateurs', label: 'Utilisateurs', icon: ShieldAlert })
+  }
+
 
   return (
     <>

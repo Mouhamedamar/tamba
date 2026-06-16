@@ -126,7 +126,11 @@ export default function Membres() {
       setDeleteTarget(null)
       fetchMembres()
       fetchAll()
-    } catch { toast.error('Erreur lors de la suppression') }
+    } catch (err) { 
+      const data = err.response?.data
+      const msg = data?.detail || data?.error || 'Erreur lors de la suppression'
+      toast.error(msg) 
+    }
   }
 
   const exportExcel = () => {

@@ -95,7 +95,11 @@ export default function Activites() {
       toast.success('Activite supprimee')
       setDeleteTarget(null)
       fetchActivites()
-    } catch { toast.error('Erreur suppression') }
+    } catch (err) {
+      const data = err.response?.data
+      const msg = data?.detail || data?.error || 'Erreur suppression'
+      toast.error(msg)
+    }
   }
 
   const counts = Object.keys(STATUT_CONFIG).reduce((acc, k) => {

@@ -1,0 +1,9 @@
+TODO: Fix HTTP 500 on /api/auth/users/<id>/ (ex: /api/auth/users/11/)
+
+1) Identify root cause in backend logs (stack trace) when requesting /api/auth/users/11/.
+2) If serializer crashes on null cellule: update users/serializers.py to safely compute cellule_nom.
+3) If migrations prevent proper app loading: fix broken migration dependency (membres.0024 depends on missing membres.0023...).
+4) If permission logic returns 500: verify IsOwnerOrAdmin / get_queryset and update to ensure 404 instead of 500.
+5) Add a small Django test hitting retrieve user endpoint.
+6) Re-run frontend request from Utilisateurs page.
+

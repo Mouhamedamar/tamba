@@ -5,9 +5,27 @@ export default function ConfirmModal({ message, onConfirm, onCancel }) {
         <h3 className="text-lg font-semibold text-gray-800 mb-2">Confirmation</h3>
         <p className="text-gray-600 mb-6">{message}</p>
         <div className="flex gap-3 justify-end">
-          <button onClick={onCancel} className="btn-secondary">Annuler</button>
-          <button onClick={onConfirm} className="btn-danger">Supprimer</button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-4 py-2.5 rounded-xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all duration-200 text-sm"
+            aria-label="Annuler"
+            title="Annuler"
+          >
+            Annuler
+          </button>
+
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="btn-danger"
+            aria-label="Confirmer la suppression"
+            title="Supprimer"
+          >
+            Supprimer
+          </button>
         </div>
+
       </div>
     </div>
   )

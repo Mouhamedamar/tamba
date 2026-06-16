@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
+
 import { getUsers, createUser, updateUser, deleteUser, getCellules } from '../services/api'
-import { Plus, Pencil, Trash2, Search, ShieldCheck, User, Users, Shield, X, CheckCircle2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, Search, ShieldCheck, User, Users, Shield, X, CheckCircle2, Eye, EyeOff } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Loader from '../components/Loader'
 import ConfirmModal from '../components/ConfirmModal'
@@ -38,7 +39,11 @@ export default function Utilisateurs() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editingUser, setEditingUser] = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleting, setDeleting] = useState(false)
+
   const [form, setForm] = useState(EMPTY_FORM)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
 
   const fetchDeps = async () => {
     try {
@@ -60,7 +65,13 @@ export default function Utilisateurs() {
     (u.last_name || '').toLowerCase().includes(search.toLowerCase())
   )
 
-  const openCreate = () => { setEditingUser(null); setForm(EMPTY_FORM); setModalOpen(true) }
+  const openCreate = () => { 
+    setEditingUser(null); 
+    setForm(EMPTY_FORM); 
+    setShowPassword(false);
+    setShowPasswordConfirm(false);
+    setModalOpen(true) 
+  }
   const openEdit = (u) => {
     setEditingUser(u)
     setForm({
@@ -68,6 +79,8 @@ export default function Utilisateurs() {
       first_name: u.first_name || '', last_name: u.last_name || '',
       telephone: u.telephone || '', role: u.role || 'agent', cellule: u.cellule || ''
     })
+    setShowPassword(false);
+    setShowPasswordConfirm(false);
     setModalOpen(true)
   }
 
@@ -95,13 +108,24 @@ export default function Utilisateurs() {
   }
 
   const handleDelete = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
     try {
       await deleteUser(deleteTarget.id)
       toast.success('Utilisateur supprime')
       setDeleteTarget(null)
       fetchDeps()
-    } catch { toast.error('Erreur lors de la suppression') }
+    } catch (err) {
+      const data = err.response?.data
+      // On affiche le detail renvoye par le backend (qui contient maintenant le message precis)
+      const msg = data?.detail || data?.error || 'Erreur lors de la suppression'
+      toast.error(msg)
+    } finally {
+      setDeleting(false)
+    }
   }
+
+
 
   const admins = users.filter(u => u.role === 'admin').length
   const responsables = users.filter(u => u.role === 'responsable').length
@@ -278,11 +302,41 @@ export default function Utilisateurs() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-sm font-medium text-white/80 mb-1.5">{editingUser ? 'Nouveau' : 'Mot de passe'} {!editingUser && <span className="text-red-400">*</span>}</label>
-                    <input type="password" className="input-field" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required={!editingUser} />
+                    <div className="relative">
+                      <input 
+                        type={showPassword ? 'text' : 'password'} 
+                        className="input-field pr-10" 
+                        value={form.password} 
+                        onChange={e => setForm({ ...form, password: e.target.value })} 
+                        required={!editingUser} 
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-white/80 mb-1.5">Confirmer {!!form.password && <span className="text-red-400">*</span>}</label>
-                    <input type="password" className="input-field" value={form.password_confirm} onChange={e => setForm({ ...form, password_confirm: e.target.value })} required={!!form.password} />
+                    <div className="relative">
+                      <input 
+                        type={showPasswordConfirm ? 'text' : 'password'} 
+                        className="input-field pr-10" 
+                        value={form.password_confirm} 
+                        onChange={e => setForm({ ...form, password_confirm: e.target.value })} 
+                        required={!!form.password} 
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                      >
+                        {showPasswordConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
