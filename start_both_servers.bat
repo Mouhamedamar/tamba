@@ -5,7 +5,7 @@ echo ========================================
 echo.
 
 echo [1/2] Demarrage du serveur Django...
-start "Django Server" cmd /k "cd /d \"c:\Users\Mouha\OneDrive\Bureau\Tamba politique\" && python manage.py runserver 0.0.0.0:8000"
+start "Django Server" cmd /k "cd /d \"c:\Users\Mouha\OneDrive\Bureau\Tamba politique\" && call env\Scripts\activate && python manage.py runserver 0.0.0.0:8000"
 
 echo [2/2] Attente de 3 secondes...
 timeout /t 3 >nul

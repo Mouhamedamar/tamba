@@ -1,6 +1,6 @@
 from django.db.models import ProtectedError
 from rest_framework import status, viewsets
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -13,20 +13,6 @@ from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSeria
 from .permissions import IsAdmin, IsOwnerOrAdmin
 
 User = get_user_model()
-
-
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def seed_admin(request):
-    """Créer un superutilisateur admin s'il n'existe pas encore (utile en production)."""
-    if not User.objects.filter(username="admin").exists():
-        User.objects.create_superuser(
-            username="admin",
-            email="admin@test.com",
-            password="Admin123456"
-        )
-        return Response({"message": "Admin créé avec succès"})
-    return Response({"message": "Admin existe déjà"})
 
 
 class AuthViewSet(viewsets.ViewSet):
