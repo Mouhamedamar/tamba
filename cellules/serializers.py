@@ -14,6 +14,8 @@ class ResponsableDataSerializer(serializers.Serializer):
 class CelluleSerializer(serializers.ModelSerializer):
     nombre_membres = serializers.IntegerField(read_only=True)
     responsable_nom = serializers.SerializerMethodField()
+    responsable_prenom = serializers.SerializerMethodField()
+    responsable_telephone = serializers.SerializerMethodField()
     responsable = serializers.PrimaryKeyRelatedField(
         queryset=Membre.objects.filter(role="responsable", is_deleted=False),
         allow_null=True, required=False
@@ -22,7 +24,8 @@ class CelluleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cellule
-        fields = ["id", "nom_cellule", "responsable", "responsable_nom", "responsable_data",
+        fields = ["id", "nom_cellule", "responsable", "responsable_nom", "responsable_prenom",
+                  "responsable_telephone", "responsable_data",
                   "description", "quartier", "commune", "departement",
                   "actif", "nombre_membres", "created_at", "updated_at"]
         read_only_fields = ["id", "created_at", "updated_at"]
@@ -30,7 +33,17 @@ class CelluleSerializer(serializers.ModelSerializer):
     def get_responsable_nom(self, obj):
         if not obj.responsable:
             return None
-        return f"{obj.responsable.prenom} {obj.responsable.nom}"
+        return obj.responsable.nom
+
+    def get_responsable_prenom(self, obj):
+        if not obj.responsable:
+            return None
+        return obj.responsable.prenom
+
+    def get_responsable_telephone(self, obj):
+        if not obj.responsable:
+            return None
+        return obj.responsable.telephone
 
 
 class CelluleListSerializer(serializers.ModelSerializer):

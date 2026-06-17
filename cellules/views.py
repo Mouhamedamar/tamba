@@ -81,11 +81,52 @@ class CelluleViewSet(viewsets.ModelViewSet):
         output_serializer = self.get_serializer(cellule)
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
+    def update(self, request, *args, **kwargs):
+        """Mettre à jour une cellule avec mise à jour ou création du responsable."""
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        # Extraire les données du responsable
+        responsable_data = serializer.validated_data.pop('responsable_data', None)
+
+        with transaction.atomic():
+            cellule = serializer.save()
+
+            if responsable_data:
+                if cellule.responsable:
+                    # Mettre à jour le responsable existant
+                    cellule.responsable.nom = responsable_data['nom']
+                    cellule.responsable.prenom = responsable_data['prenom']
+                    cellule.responsable.telephone = responsable_data['telephone']
+                    if 'quartier' in responsable_data:
+                        cellule.responsable.quartier = responsable_data['quartier']
+                    cellule.responsable.save()
+                else:
+                    # Créer un nouveau responsable
+                    responsable = Membre.objects.create(
+                        nom=responsable_data['nom'],
+                        prenom=responsable_data['prenom'],
+                        telephone=responsable_data['telephone'],
+                        quartier=responsable_data.get('quartier', ''),
+                        role='responsable',
+                        cellule=cellule,
+                        cree_par=request.user,
+                    )
+                    cellule.responsable = responsable
+                    cellule.save(update_fields=['responsable'])
+
+        cache.clear()
+        output_serializer = self.get_serializer(cellule)
+        return Response(output_serializer.data)
+
     def perform_create(self, serializer):
         # Fallback (non utilisé quand create() est surchargé)
         serializer.save()
         cache.clear()
 
     def perform_update(self, serializer):
+        # Fallback (non utilisé quand update() est surchargé)
         serializer.save()
         cache.clear()

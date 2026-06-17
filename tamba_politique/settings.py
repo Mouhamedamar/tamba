@@ -86,10 +86,12 @@ logger.warning(f">>> DATABASE ENGINE: {_db_engine}")
 
 # Safety check: crash on Render if using SQLite (data would be lost on restart)
 if os.environ.get('RENDER') and 'sqlite' in _db_engine:
+    _database_url_value = os.environ.get('DATABASE_URL', '(NOT SET)')
     raise RuntimeError(
-        "FATAL: SQLite detected on Render! "
-        "Set DATABASE_URL env var to your PostgreSQL connection string. "
-        "Data on ephemeral filesystem will be lost on every restart."
+        f"FATAL: SQLite detected on Render! "
+        f"DATABASE_URL = {_database_url_value[:20] + '...' if len(_database_url_value) > 20 else _database_url_value}. "
+        f"Go to Render dashboard → Environment → Add DATABASE_URL with your PostgreSQL connection string. "
+        f"Then redeploy."
     )
 
 AUTH_PASSWORD_VALIDATORS = [

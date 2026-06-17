@@ -58,9 +58,15 @@ export default function Cellules() {
         departement: data.departement ?? "Tambacounda", actif: data.actif ?? true,
         responsable: data.responsable ?? null,
       })
-      if (data.responsable_nom) {
+      if (data.responsable) {
+        // Cellule already has a responsable → load their info into the form
         setHasResponsable(true)
-        setResponsableData({ nom: "", prenom: "", telephone: "", quartier: "" })
+        setResponsableData({
+          nom: data.responsable_nom ?? "",
+          prenom: data.responsable_prenom ?? "",
+          telephone: data.responsable_telephone ?? "",
+          quartier: "",
+        })
       } else {
         setHasResponsable(false)
         setResponsableData(EMPTY_RESPONSABLE)
