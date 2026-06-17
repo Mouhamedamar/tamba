@@ -6,6 +6,7 @@ import toast from "react-hot-toast"
 import { Plus, Edit2, Trash2, Building2, X, Search, Users, MapPin, CheckCircle2 } from "lucide-react"
 
 const EMPTY_FORM = { nom_cellule: "", description: "", quartier: "", commune: "", departement: "Tambacounda", actif: true, responsable: null }
+const EMPTY_RESPONSABLE = { nom: "", prenom: "", telephone: "", quartier: "" }
 
 export default function Cellules() {
   const [cellules, setCellules] = useState([])
@@ -19,6 +20,8 @@ export default function Cellules() {
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [error, setError] = useState(null)
   const [search, setSearch] = useState("")
+  const [hasResponsable, setHasResponsable] = useState(false)
+  const [responsableData, setResponsableData] = useState(EMPTY_RESPONSABLE)
 
   const fetchResponsables = useCallback(async () => {
     try {
@@ -43,7 +46,7 @@ export default function Cellules() {
 
   useEffect(() => { fetchCellules(); fetchResponsables() }, [fetchCellules, fetchResponsables])
 
-  const openCreate = () => { setEditTarget(null); setForm(EMPTY_FORM); setErrors({}); setShowModal(true) }
+  const openCreate = () => { setEditTarget(null); setForm(EMPTY_FORM); setErrors({}); setHasResponsable(false); setResponsableData(EMPTY_RESPONSABLE); setShowModal(true) }
 
   const openEdit = async (c) => {
     try {
@@ -55,6 +58,13 @@ export default function Cellules() {
         departement: data.departement ?? "Tambacounda", actif: data.actif ?? true,
         responsable: data.responsable ?? null,
       })
+      if (data.responsable_nom) {
+        setHasResponsable(true)
+        setResponsableData({ nom: "", prenom: "", telephone: "", quartier: "" })
+      } else {
+        setHasResponsable(false)
+        setResponsableData(EMPTY_RESPONSABLE)
+      }
       setErrors({})
       setShowModal(true)
     } catch { toast.error("Impossible de charger la cellule") }
@@ -65,6 +75,11 @@ export default function Cellules() {
     setSaving(true)
     const payload = { ...form }
     if (!payload.responsable) delete payload.responsable
+    // If toggle is on and fields filled, send responsable_data for backend creation
+    if (hasResponsable && responsableData.nom && responsableData.prenom && responsableData.telephone) {
+      payload.responsable_data = responsableData
+      delete payload.responsable  // let backend create and link
+    }
     try {
       if (editTarget) {
         await updateCellule(editTarget.id, payload)
@@ -248,10 +263,40 @@ export default function Cellules() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-white/80 mb-1.5">Responsable</label>
-                <select className="input-field" value={form.responsable ?? ""} onChange={(e) => setForm({ ...form, responsable: e.target.value ? parseInt(e.target.value) : null })}>
-                  <option value="" style={{backgroundColor:'#0a1410'}}>-- Selectionner --</option>
-                  {responsables.map((r) => <option key={r.id} value={r.id} style={{backgroundColor:'#0a1410'}}>{r.prenom} {r.nom}</option>)}
-                </select>
+                {/* Toggle: avez-vous un responsable ? */}
+                <div className="flex items-center gap-3 mb-3 cursor-pointer" onClick={() => { setHasResponsable(!hasResponsable); if (hasResponsable) { setResponsableData(EMPTY_RESPONSABLE); setForm({ ...form, responsable: null }); } }}>
+                  <div className={"relative w-11 h-6 rounded-full transition-colors duration-200 " + (hasResponsable ? "bg-green-500" : "bg-white/20")}>
+                    <div className={"absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 " + (hasResponsable ? "translate-x-5" : "")} />
+                  </div>
+                  <span className="text-sm font-medium text-white/80">Avez-vous un responsable de cellule ?</span>
+                </div>
+
+                {/* If Yes: inline responsable form */}
+                {hasResponsable && (
+                  <div className="space-y-3 border border-white/10 rounded-xl p-4 bg-white/5">
+                    <p className="text-xs text-green-400 font-semibold uppercase tracking-wider mb-2">Informations du responsable</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-white/60 mb-1">Nom <span className="text-red-400">*</span></label>
+                        <input className="input-field" value={responsableData.nom} onChange={(e) => setResponsableData({ ...responsableData, nom: e.target.value })} placeholder="Nom" required />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-white/60 mb-1">Prénom <span className="text-red-400">*</span></label>
+                        <input className="input-field" value={responsableData.prenom} onChange={(e) => setResponsableData({ ...responsableData, prenom: e.target.value })} placeholder="Prénom" required />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-white/60 mb-1">Téléphone <span className="text-red-400">*</span></label>
+                      <input className="input-field" value={responsableData.telephone} onChange={(e) => setResponsableData({ ...responsableData, telephone: e.target.value })} placeholder="77 123 45 67" required />
+                    </div>
+                  </div>
+                )}
+
+                {/* If editing and cellule already has a responsable, show current name */}
+                {editTarget && form.responsable && !hasResponsable && (
+                  <p className="text-xs text-yellow-400 mt-1">Responsable actuel : {editTarget.responsable_nom || "—"}</p>
+                )}
+                {errors.responsable_data && <p className="text-red-400 text-xs mt-1">{errors.responsable_data}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-white/80 mb-1.5">Description</label>

@@ -3,6 +3,14 @@ from membres.models import Membre
 from .models import Cellule
 
 
+class ResponsableDataSerializer(serializers.Serializer):
+    """Serializer pour les données du responsable envoyées depuis le formulaire cellule."""
+    nom = serializers.CharField(max_length=100)
+    prenom = serializers.CharField(max_length=100)
+    telephone = serializers.CharField(max_length=20)
+    quartier = serializers.CharField(max_length=200, required=False, allow_blank=True, default='')
+
+
 class CelluleSerializer(serializers.ModelSerializer):
     nombre_membres = serializers.IntegerField(read_only=True)
     responsable_nom = serializers.SerializerMethodField()
@@ -10,10 +18,11 @@ class CelluleSerializer(serializers.ModelSerializer):
         queryset=Membre.objects.filter(role="responsable", is_deleted=False),
         allow_null=True, required=False
     )
+    responsable_data = ResponsableDataSerializer(write_only=True, required=False)
 
     class Meta:
         model = Cellule
-        fields = ["id", "nom_cellule", "responsable", "responsable_nom",
+        fields = ["id", "nom_cellule", "responsable", "responsable_nom", "responsable_data",
                   "description", "quartier", "commune", "departement",
                   "actif", "nombre_membres", "created_at", "updated_at"]
         read_only_fields = ["id", "created_at", "updated_at"]

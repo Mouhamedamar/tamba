@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from django.core.cache import cache
+from django.db import transaction
+from membres.models import Membre
 from .models import Cellule
 from .serializers import CelluleSerializer, CelluleListSerializer
 from .permissions import IsAdminOrResponsable, IsAdminOrReadOnly
@@ -48,7 +50,39 @@ class CelluleViewSet(viewsets.ModelViewSet):
             return Response({"detail": detail}, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def create(self, request, *args, **kwargs):
+        """Créer une cellule avec création optionnelle du responsable en une seule requête."""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Extraire les données du responsable avant la sauvegarde
+        responsable_data = serializer.validated_data.pop('responsable_data', None)
+
+        with transaction.atomic():
+            # 1. Créer la cellule sans responsable
+            cellule = serializer.save(responsable=None)
+
+            # 2. Si données responsable fournies → créer le membre responsable
+            if responsable_data:
+                responsable = Membre.objects.create(
+                    nom=responsable_data['nom'],
+                    prenom=responsable_data['prenom'],
+                    telephone=responsable_data['telephone'],
+                    quartier=responsable_data.get('quartier', ''),
+                    role='responsable',
+                    cellule=cellule,
+                    cree_par=request.user,
+                )
+                # 3. Lier le responsable à la cellule
+                cellule.responsable = responsable
+                cellule.save(update_fields=['responsable'])
+
+        cache.clear()
+        output_serializer = self.get_serializer(cellule)
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
     def perform_create(self, serializer):
+        # Fallback (non utilisé quand create() est surchargé)
         serializer.save()
         cache.clear()
 

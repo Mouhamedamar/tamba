@@ -7,6 +7,9 @@ from pathlib import Path
 from datetime import timedelta
 
 import dj_database_url
+import logging
+
+logger = logging.getLogger(__name__)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -76,6 +79,18 @@ DATABASES = {
         conn_max_age=600,
     )
 }
+
+# Log database engine at startup for diagnostics
+_db_engine = DATABASES['default']['ENGINE']
+logger.warning(f">>> DATABASE ENGINE: {_db_engine}")
+
+# Safety check: crash on Render if using SQLite (data would be lost on restart)
+if os.environ.get('RENDER') and 'sqlite' in _db_engine:
+    raise RuntimeError(
+        "FATAL: SQLite detected on Render! "
+        "Set DATABASE_URL env var to your PostgreSQL connection string. "
+        "Data on ephemeral filesystem will be lost on every restart."
+    )
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

@@ -1,6 +1,6 @@
 from django.db.models import ProtectedError
 from rest_framework import status, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -8,11 +8,30 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer
 from .permissions import IsAdmin, IsOwnerOrAdmin
 
 User = get_user_model()
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def db_status(request):
+    """Diagnostic temporaire : vérifie le type de base de données utilisée."""
+    engine = settings.DATABASES['default']['ENGINE']
+    db_name = settings.DATABASES['default'].get('NAME', 'unknown')
+    user_count = User.objects.count()
+    return Response({
+        'engine': engine,
+        'database': str(db_name),
+        'is_postgres': 'postgresql' in engine,
+        'is_sqlite': 'sqlite' in engine,
+        'user_count': user_count,
+        'render_env': bool(__import__('os').environ.get('RENDER')),
+        'database_url_set': bool(__import__('os').environ.get('DATABASE_URL')),
+    })
 
 
 class AuthViewSet(viewsets.ViewSet):

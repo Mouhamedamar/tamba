@@ -1,12 +1,13 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import AuthViewSet, UserViewSet
+from .views import AuthViewSet, UserViewSet, db_status
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('db-status/', db_status, name='db-status'),
     path('login/', AuthViewSet.as_view({
         'post': 'login',
     }), name='auth-login'),
