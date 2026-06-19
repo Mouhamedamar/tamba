@@ -1,6 +1,7 @@
 ﻿import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import PrivateRoute from './components/PrivateRoute'
+import AdminRoute from './components/AdminRoute'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
@@ -33,15 +34,17 @@ export default function App() {
             </PrivateRoute>
           }
         >
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route index element={<Navigate to="/membres" replace />} />
+          {/* Routes for all authenticated users */}
           <Route path="membres" element={<Membres />} />
-          <Route path="cellules" element={<Cellules />} />
-          <Route path="primo-votants" element={<PrimoVotants />} />
           <Route path="activites" element={<Activites />} />
-          <Route path="utilisateurs" element={<Utilisateurs />} />
+          {/* Admin-only routes */}
+          <Route path="dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
+          <Route path="cellules" element={<AdminRoute><Cellules /></AdminRoute>} />
+          <Route path="primo-votants" element={<AdminRoute><PrimoVotants /></AdminRoute>} />
+          <Route path="utilisateurs" element={<AdminRoute><Utilisateurs /></AdminRoute>} />
         </Route>
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/membres" replace />} />
       </Routes>
     </BrowserRouter>
   )

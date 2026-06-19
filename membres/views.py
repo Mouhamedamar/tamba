@@ -55,11 +55,32 @@ class MembreViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def perform_create(self, serializer):
-        serializer.save(cree_par=self.request.user)
+        user = self.request.user
+        # Non-admin users can only create militants in their own cellule
+        if not user.is_admin and user.cellule:
+            serializer.save(
+                cree_par=user,
+                cellule=user.cellule,
+                role='militant',
+                quartier=user.cellule.quartier,
+            )
+        else:
+            # Admin: sync quartier from cellule if provided
+            cellule_id = serializer.validated_data.get('cellule')
+            quartier_override = ''
+            if cellule_id:
+                quartier_override = cellule_id.quartier
+            serializer.save(cree_par=user, quartier=quartier_override)
 
     def perform_destroy(self, instance):
         instance.is_deleted = True
         instance.save()
+
+    def perform_update(self, serializer):
+        """Sync quartier from cellule on update."""
+        cellule = serializer.validated_data.get('cellule', serializer.instance.cellule)
+        quartier = cellule.quartier if cellule else ''
+        serializer.save(quartier=quartier)
 
     @action(detail=False, methods=["get"], url_path="responsables-list")
     def responsables_list(self, request):

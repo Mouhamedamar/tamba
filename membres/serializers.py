@@ -110,6 +110,9 @@ class MembreSerializer(serializers.ModelSerializer):
 class MembreCreateSerializer(serializers.ModelSerializer):
     """Serializer pour la création de membres."""
 
+    # quartier is auto-synced from cellule in perform_create, so it's optional here
+    quartier = serializers.CharField(required=False, allow_blank=True, default='')
+
     class Meta:
         model = Membre
         fields = [

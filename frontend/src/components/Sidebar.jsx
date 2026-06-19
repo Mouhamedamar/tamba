@@ -5,12 +5,18 @@ import { clearTokens } from '../utils/auth'
 import { getMe } from '../services/api'
 import logo from '../assets/logo.svg'
 
-const baseLinks = [
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+// Links visible to ALL authenticated users
+const sharedLinks = [
   { to: '/membres', label: 'Membres', icon: Users },
+  { to: '/activites', label: 'Activites', icon: Calendar },
+]
+
+// Links visible ONLY to admins
+const adminLinks = [
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/cellules', label: 'Cellules', icon: Building2 },
   { to: '/primo-votants', label: 'Primo Votants', icon: Vote },
-  { to: '/activites', label: 'Activites', icon: Calendar },
+  { to: '/utilisateurs', label: 'Utilisateurs', icon: ShieldAlert },
 ]
 
 const linkClass = (isActive) =>
@@ -41,10 +47,10 @@ export default function Sidebar() {
 
   const handleLogout = () => { clearTokens(); navigate('/login') }
 
-  const links = [...baseLinks]
-  // Afficher la page Utilisateurs si l'utilisateur a le rôle admin côté API.
-  // (corrige le cas où userRole peut être null au 1er rendu)
+  // Build links based on role: everyone gets shared links, admins get admin links too
+  const links = [...sharedLinks]
   if (userRole === 'admin') {
+    links.unshift(...adminLinks.filter(l => l.to !== '/utilisateurs'))
     links.push({ to: '/utilisateurs', label: 'Utilisateurs', icon: ShieldAlert })
   }
 

@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { getMembres, getCellules, createMembre, updateMembre, deleteMembre } from '../services/api'
+import { getMembres, getCellules, createMembre, updateMembre, deleteMembre, getMe } from '../services/api'
 import Loader from '../components/Loader'
 import ConfirmModal from '../components/ConfirmModal'
 import toast from 'react-hot-toast'
@@ -38,6 +38,8 @@ export default function Membres() {
   const [form, setForm] = useState(EMPTY_FORM)
   const [errors, setErrors] = useState({})
   const [deleteTarget, setDeleteTarget] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null)
+  const isAdmin = currentUser?.role === 'admin'
 
   const fetchMembres = useCallback(async () => {
     setLoading(true)
@@ -64,8 +66,28 @@ export default function Membres() {
   useEffect(() => {
     getCellules().then(({ data }) => setCellules(Array.isArray(data) ? data : data.results ?? [])).catch(() => {})
   }, [])
+  useEffect(() => {
+    getMe().then(res => setCurrentUser(res.data)).catch(() => {})
+  }, [])
 
-  const openCreate = () => { setEditTarget(null); setForm(EMPTY_FORM); setErrors({}); setShowModal(true) }
+  // Get quartier from a cellule ID
+  const getQuartierFromCellule = (celluleId) => {
+    const c = cellules.find(c => c.id === parseInt(celluleId, 10))
+    return c?.quartier || ''
+  }
+
+  const openCreate = () => {
+    setEditTarget(null)
+    setErrors({})
+    if (!isAdmin && currentUser?.cellule) {
+      // Non-admin: auto-lock to their cellule, role forced to militant
+      const quartier = currentUser.cellule_quartier || ''
+      setForm({ ...EMPTY_FORM, cellule: currentUser.cellule, role: 'militant', quartier })
+    } else {
+      setForm(EMPTY_FORM)
+    }
+    setShowModal(true)
+  }
   const openEdit = (m) => {
     setEditTarget(m)
     setForm({
@@ -217,16 +239,18 @@ export default function Membres() {
 
       {/* Filters */}
       <div className="card p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className={"grid gap-3 " + (isAdmin ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-1 sm:grid-cols-2")}>
           <div className="relative">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input type="text" placeholder="Rechercher par nom..." className="input-field pl-9"
               value={search} onChange={(e) => { setSearch(e.target.value); setPage(1) }} />
           </div>
-          <select className="input-field" value={filterCellule} onChange={(e) => { setFilterCellule(e.target.value); setPage(1) }}>
-            <option value="">Toutes les cellules</option>
-            {cellules.map((c) => <option key={c.id} value={c.id}>{c.nom_cellule}</option>)}
-          </select>
+          {isAdmin && (
+            <select className="input-field" value={filterCellule} onChange={(e) => { setFilterCellule(e.target.value); setPage(1) }}>
+              <option value="">Toutes les cellules</option>
+              {cellules.map((c) => <option key={c.id} value={c.id}>{c.nom_cellule}</option>)}
+            </select>
+          )}
           <input type="text" placeholder="Filtrer par quartier..." className="input-field"
             value={filterQuartier} onChange={(e) => { setFilterQuartier(e.target.value); setPage(1) }} />
         </div>
@@ -355,8 +379,15 @@ export default function Membres() {
                     {errors.telephone && <p className="text-red-400 text-xs mt-1">{Array.isArray(errors.telephone) ? errors.telephone[0] : errors.telephone}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-white/80 mb-1.5">Quartier <span className="text-red-400">*</span></label>
-                    <input className="input-field" placeholder="Quartier" value={form.quartier} onChange={e => setForm({ ...form, quartier: e.target.value })} required />
+                    <label className="block text-sm font-medium text-white/80 mb-1.5">Quartier</label>
+                    {isAdmin ? (
+                      <input className="input-field bg-white/5" placeholder="Auto depuis la cellule" value={form.quartier} readOnly />
+                    ) : (
+                      <div className="input-field flex items-center text-white/70 bg-white/5">
+                        <MapPin size={14} className="mr-2 text-green-400" />
+                        {form.quartier || '—'}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -367,17 +398,34 @@ export default function Membres() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-white/80 mb-1.5">Cellule <span className="text-red-400">*</span></label>
-                    <select className="input-field" value={form.cellule} onChange={e => setForm({ ...form, cellule: e.target.value })} required>
-                      <option value="" style={{backgroundColor:'#0a1410'}}>-- Choisir --</option>
-                      {cellules.map(c => <option key={c.id} value={c.id} style={{backgroundColor:'#0a1410'}}>{c.nom_cellule}</option>)}
-                    </select>
+                    {isAdmin ? (
+                      <select className="input-field" value={form.cellule} onChange={e => {
+                        const celluleId = e.target.value
+                        setForm({ ...form, cellule: celluleId, quartier: getQuartierFromCellule(celluleId) })
+                      }} required>
+                        <option value="" style={{backgroundColor:'#0a1410'}}>-- Choisir --</option>
+                        {cellules.map(c => <option key={c.id} value={c.id} style={{backgroundColor:'#0a1410'}}>{c.nom_cellule}</option>)}
+                      </select>
+                    ) : (
+                      <div className="input-field flex items-center text-white/70 bg-white/5">
+                        <Building2 size={14} className="mr-2 text-green-400" />
+                        {currentUser?.cellule_nom || 'Ma cellule'}
+                      </div>
+                    )}
                     {errors.cellule && <p className="text-red-400 text-xs mt-1">{Array.isArray(errors.cellule) ? errors.cellule[0] : errors.cellule}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-white/80 mb-1.5">Role</label>
-                    <select className="input-field" value={form.role} onChange={e => setForm({ ...form, role: e.target.value })}>
-                      {ROLE_CHOICES.map(r => <option key={r.value} value={r.value} style={{backgroundColor:'#0a1410'}}>{r.label}</option>)}
-                    </select>
+                    {isAdmin ? (
+                      <select className="input-field" value={form.role} onChange={e => setForm({ ...form, role: e.target.value })}>
+                        {ROLE_CHOICES.map(r => <option key={r.value} value={r.value} style={{backgroundColor:'#0a1410'}}>{r.label}</option>)}
+                      </select>
+                    ) : (
+                      <div className="input-field flex items-center text-white/70 bg-white/5">
+                        <Users size={14} className="mr-2 text-green-400" />
+                        Militant
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

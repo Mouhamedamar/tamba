@@ -35,6 +35,7 @@ class IsAgentOrAbove(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_admin:
             return True
-        if request.user.is_responsable:
+        # Responsable and agent can only access members in their own cellule
+        if request.user.is_responsable or request.user.is_agent:
             return obj.cellule_id == request.user.cellule_id
         return False

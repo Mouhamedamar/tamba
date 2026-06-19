@@ -13,6 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     # Robustesse: certains users peuvent avoir cellule = NULL.
     cellule_nom = serializers.SerializerMethodField(read_only=True)
+    cellule_quartier = serializers.SerializerMethodField(read_only=True)
 
     password = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
@@ -23,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'username', 'email', 'first_name', 'last_name',
-            'role', 'role_label', 'telephone', 'cellule', 'cellule_nom',
+            'role', 'role_label', 'telephone', 'cellule', 'cellule_nom', 'cellule_quartier',
             'date_joined', 'password'
         ]
         read_only_fields = ['id', 'date_joined']
@@ -34,6 +35,10 @@ class UserSerializer(serializers.ModelSerializer):
     def get_cellule_nom(self, obj):
         cellule = getattr(obj, 'cellule', None)
         return getattr(cellule, 'nom_cellule', None) if cellule else None
+
+    def get_cellule_quartier(self, obj):
+        cellule = getattr(obj, 'cellule', None)
+        return getattr(cellule, 'quartier', None) if cellule else None
 
 
 
