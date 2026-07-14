@@ -7,9 +7,9 @@ import Loader from '../components/Loader'
 import ConfirmModal from '../components/ConfirmModal'
 
 const ROLE_COLORS = {
-  admin: 'bg-red-100 text-red-700',
-  responsable: 'bg-purple-100 text-purple-700',
-  agent: 'bg-blue-100 text-blue-700',
+  admin: 'bg-red-500/30 text-red-300',
+  responsable: 'bg-purple-500/30 text-purple-300',
+  agent: 'bg-blue-500/30 text-blue-300',
 }
 
 const ROLE_LABELS = { admin: 'Administrateur', responsable: 'Responsable', agent: 'Agent' }
@@ -193,32 +193,32 @@ export default function Utilisateurs() {
               </thead>
               <tbody>
                 {filtered.map((u) => (
-                  <tr key={u.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={u.id} className="hover:bg-white/10 transition-colors">
                     <td className="table-cell">
                       <div className="flex items-center gap-3">
                         <div className={"w-9 h-9 bg-gradient-to-br rounded-full flex items-center justify-center text-white font-bold text-xs flex-shrink-0 " + avatarColor(u.role)}>
                           {initials(u)}
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-800">{u.username}</p>
+                          <p className="font-semibold text-white">{u.username}</p>
                           {(u.first_name || u.last_name) && (
-                            <p className="text-xs text-gray-400">{u.first_name} {u.last_name}</p>
+                            <p className="text-xs text-white/70">{u.first_name} {u.last_name}</p>
                           )}
-                          {u.email && <p className="text-xs text-gray-400">{u.email}</p>}
+                          {u.email && <p className="text-xs text-white/70">{u.email}</p>}
                         </div>
                       </div>
                     </td>
                     <td className="table-cell">
-                      <span className={"inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold " + (ROLE_COLORS[u.role] || 'bg-gray-100 text-gray-600')}>
+                      <span className={"inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold " + (ROLE_COLORS[u.role] || 'bg-gray-500/30 text-gray-300')}>
                         {ROLE_LABELS[u.role] || u.role}
                       </span>
                     </td>
-                    <td className="table-cell text-sm text-gray-600">{u.cellule_nom || '—'}</td>
-                    <td className="table-cell text-sm text-gray-600">{u.telephone || '—'}</td>
+                    <td className="table-cell text-sm text-white/70">{u.cellule_nom || '—'}</td>
+                    <td className="table-cell text-sm text-white/70">{u.telephone || '—'}</td>
                     <td className="table-cell">
                       <div className="flex items-center gap-1">
-                        <button onClick={() => openEdit(u)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><Pencil size={15} /></button>
-                        <button onClick={() => setDeleteTarget(u)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 size={15} /></button>
+                        <button onClick={() => openEdit(u)} className="p-1.5 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-colors"><Pencil size={15} /></button>
+                        <button onClick={() => setDeleteTarget(u)} className="p-1.5 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"><Trash2 size={15} /></button>
                       </div>
                     </td>
                   </tr>

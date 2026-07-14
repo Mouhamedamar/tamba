@@ -275,46 +275,46 @@ export default function Membres() {
               </thead>
               <tbody>
                 {membres.map((m) => (
-                  <tr key={m.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={m.id} className="hover:bg-white/10 transition-colors">
                     <td className="table-cell">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
                           {initials(m)}
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-800">{m.full_name || (m.prenom + ' ' + m.nom)}</p>
-                          <p className="text-xs text-gray-400 flex items-center gap-1"><MapPin size={10} />{m.quartier || '—'}</p>
+                          <p className="font-semibold text-white">{m.full_name || (m.prenom + ' ' + m.nom)}</p>
+                          <p className="text-xs text-white/70 flex items-center gap-1"><MapPin size={10} />{m.quartier || '—'}</p>
                         </div>
                       </div>
                     </td>
                     <td className="table-cell">
-                      <p className="flex items-center gap-1 text-sm"><Phone size={12} className="text-gray-400" />{m.telephone || '—'}</p>
-                      {m.numero_identification && <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5"><CreditCard size={10} />{m.numero_identification}</p>}
+                      <p className="flex items-center gap-1 text-sm"><Phone size={12} className="text-white/70" />{m.telephone || '—'}</p>
+                      {m.numero_identification && <p className="text-xs text-white/70 flex items-center gap-1 mt-0.5"><CreditCard size={10} />{m.numero_identification}</p>}
                     </td>
                     <td className="table-cell">
-                      <span className="flex items-center gap-1 text-sm"><Building2 size={12} className="text-gray-400" />{m.cellule_nom || '—'}</span>
+                      <span className="flex items-center gap-1 text-sm"><Building2 size={12} className="text-white/70" />{m.cellule_nom || '—'}</span>
                     </td>
                     <td className="table-cell">
-                      <span className={"inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold " + (m.role === 'responsable' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700')}>
+                      <span className={"inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold " + (m.role === 'responsable' ? 'bg-purple-500/30 text-purple-300' : 'bg-green-500/30 text-green-300')}>
                         {m.role === 'responsable' ? 'Responsable' : 'Militant'}
                       </span>
                     </td>
                     <td className="table-cell">
                       {m.inscrit_liste_electorale ? (
                         <div>
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/30 text-blue-300">
                             <CheckCircle2 size={11} /> Inscrit
                           </span>
-                          {m.numero_carte_electeur && <p className="text-xs text-gray-400 mt-0.5">{m.numero_carte_electeur}</p>}
+                          {m.numero_carte_electeur && <p className="text-xs text-white/70 mt-0.5">{m.numero_carte_electeur}</p>}
                         </div>
                       ) : (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Non inscrit</span>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white/10 text-white/60">Non inscrit</span>
                       )}
                     </td>
                     <td className="table-cell">
                       <div className="flex items-center gap-1">
-                        <button onClick={() => openEdit(m)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><Pencil size={15} /></button>
-                        <button onClick={() => setDeleteTarget(m)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 size={15} /></button>
+                        <button onClick={() => openEdit(m)} className="p-1.5 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-colors"><Pencil size={15} /></button>
+                        <button onClick={() => setDeleteTarget(m)} className="p-1.5 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"><Trash2 size={15} /></button>
                       </div>
                     </td>
                   </tr>
@@ -324,11 +324,11 @@ export default function Membres() {
           </div>
         )}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
-            <p className="text-sm text-gray-500">{total} membres - Page {page} sur {totalPages}</p>
+          <div className="flex items-center justify-between px-4 py-3 border-t border-white/10">
+            <p className="text-sm text-white/70">{total} membres - Page {page} sur {totalPages}</p>
             <div className="flex gap-2">
-              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50"><ChevronLeft size={16} /></button>
-              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50"><ChevronRight size={16} /></button>
+              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="p-1.5 rounded-lg border border-white/20 disabled:opacity-40 hover:bg-white/10"><ChevronLeft size={16} /></button>
+              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="p-1.5 rounded-lg border border-white/20 disabled:opacity-40 hover:bg-white/10"><ChevronRight size={16} /></button>
             </div>
           </div>
         )}

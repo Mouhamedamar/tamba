@@ -188,27 +188,27 @@ export default function PrimoVotants() {
               </thead>
               <tbody>
                 {list.map(p => (
-                  <tr key={p.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={p.id} className="hover:bg-white/10 transition-colors">
                     <td className="table-cell">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-bold text-xs flex-shrink-0">
+                        <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
                           {p.prenom[0]}{p.nom[0]}
                         </div>
-                        <span className="font-medium">{p.prenom} {p.nom}</span>
+                        <span className="font-medium text-white">{p.prenom} {p.nom}</span>
                       </div>
                     </td>
-                    <td className="table-cell"><span className="flex items-center gap-1"><MapPin size={13} className="text-gray-400" />{p.quartier}</span></td>
-                    <td className="table-cell"><span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">{age(p.annee_naissance)} ans ({p.annee_naissance})</span></td>
-                    <td className="table-cell"><span className="flex items-center gap-1"><Phone size={13} className="text-gray-400" />{p.telephone}</span></td>
+                    <td className="table-cell"><span className="flex items-center gap-1"><MapPin size={13} className="text-white/70" />{p.quartier}</span></td>
+                    <td className="table-cell"><span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-500/30 text-blue-300">{age(p.annee_naissance)} ans ({p.annee_naissance})</span></td>
+                    <td className="table-cell"><span className="flex items-center gap-1"><Phone size={13} className="text-white/70" />{p.telephone}</span></td>
                     <td className="table-cell">
                       {p.a_nin
-                        ? <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700"><CheckCircle2 size={11} />{p.numero_nin}</span>
-                        : <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Sans NIN</span>}
+                        ? <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/30 text-green-300"><CheckCircle2 size={11} />{p.numero_nin}</span>
+                        : <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white/10 text-white/60">Sans NIN</span>}
                     </td>
                     <td className="table-cell">
                       <div className="flex items-center gap-1">
-                        <button onClick={() => openEdit(p)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><Pencil size={15} /></button>
-                        <button onClick={() => setDeleteTarget(p)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 size={15} /></button>
+                        <button onClick={() => openEdit(p)} className="p-1.5 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-colors"><Pencil size={15} /></button>
+                        <button onClick={() => setDeleteTarget(p)} className="p-1.5 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"><Trash2 size={15} /></button>
                       </div>
                     </td>
                   </tr>
@@ -218,11 +218,11 @@ export default function PrimoVotants() {
           </div>
         )}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
-            <p className="text-sm text-gray-500">{total} resultats - Page {page} sur {totalPages}</p>
+          <div className="flex items-center justify-between px-4 py-3 border-t border-white/10">
+            <p className="text-sm text-white/70">{total} resultats - Page {page} sur {totalPages}</p>
             <div className="flex gap-2">
-              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50"><ChevronLeft size={16} /></button>
-              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50"><ChevronRight size={16} /></button>
+              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="p-1.5 rounded-lg border border-white/20 disabled:opacity-40 hover:bg-white/10"><ChevronLeft size={16} /></button>
+              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="p-1.5 rounded-lg border border-white/20 disabled:opacity-40 hover:bg-white/10"><ChevronRight size={16} /></button>
             </div>
           </div>
         )}

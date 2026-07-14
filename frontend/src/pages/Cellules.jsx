@@ -375,8 +375,8 @@ export default function Cellules() {
                 </div>
               ) : selectedCelluleMembres.length === 0 ? (
                 <div className="text-center py-8">
-                  <Users size={40} className="mx-auto mb-3 text-gray-400" />
-                  <p className="text-gray-400">Aucun membre dans cette cellule</p>
+                  <Users size={40} className="mx-auto mb-3 text-white/60" />
+                  <p className="text-white/60">Aucun membre dans cette cellule</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -387,9 +387,9 @@ export default function Cellules() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="text-white font-semibold truncate">{membre.nom} {membre.prenom}</h3>
-                        <p className="text-gray-400 text-sm">{membre.telephone || "Pas de téléphone"}</p>
+                        <p className="text-white/70 text-sm">{membre.telephone || "Pas de téléphone"}</p>
                         {membre.quartier && (
-                          <p className="text-gray-500 text-xs mt-0.5">{membre.quartier}</p>
+                          <p className="text-white/50 text-xs mt-0.5">{membre.quartier}</p>
                         )}
                       </div>
                       <span className={"inline-flex items-center px-2 py-1 rounded-full text-xs font-medium " + (membre.actif ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400")}>

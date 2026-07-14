@@ -15,10 +15,10 @@ const apiPut = (url, data) => axios.put(BASE + url, data, { headers: h() })
 const apiDelete = (url) => axios.delete(BASE + url, { headers: h() })
 
 const STATUT_CONFIG = {
-  a_venir:  { label: 'A venir',  color: 'bg-blue-100 text-blue-700',   icon: Clock,        bar: 'bg-blue-400' },
-  en_cours: { label: 'En cours', color: 'bg-green-100 text-green-700', icon: CheckCircle2, bar: 'bg-green-500' },
-  termine:  { label: 'Termine',  color: 'bg-gray-100 text-gray-600',   icon: CheckCircle2, bar: 'bg-gray-400' },
-  annule:   { label: 'Annule',   color: 'bg-red-100 text-red-700',     icon: XCircle,      bar: 'bg-red-400' },
+  a_venir:  { label: 'A venir',  color: 'bg-blue-500/30 text-blue-300',   icon: Clock,        bar: 'bg-blue-400' },
+  en_cours: { label: 'En cours', color: 'bg-green-500/30 text-green-300', icon: CheckCircle2, bar: 'bg-green-500' },
+  termine:  { label: 'Termine',  color: 'bg-gray-500/30 text-gray-300',   icon: CheckCircle2, bar: 'bg-gray-400' },
+  annule:   { label: 'Annule',   color: 'bg-red-500/30 text-red-300',     icon: XCircle,      bar: 'bg-red-400' },
 }
 
 const EMPTY = { titre: '', description: '', date_debut: '', date_fin: '', lieu: '', statut: 'a_venir' }
@@ -164,7 +164,7 @@ export default function Activites() {
             const cfg = STATUT_CONFIG[a.statut] || STATUT_CONFIG.a_venir
             const Icon = cfg.icon
             return (
-              <div key={a.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden">
+              <div key={a.id} className="bg-white/5 rounded-2xl border border-white/10 shadow-sm hover:shadow-md hover:bg-white/10 transition-all overflow-hidden">
                 <div className={"h-1 w-full " + cfg.bar} />
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
@@ -174,13 +174,13 @@ export default function Activites() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="font-bold text-gray-900">{a.titre}</h3>
+                          <h3 className="font-bold text-white">{a.titre}</h3>
                           <span className={"inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold " + cfg.color}>
                             {cfg.label}
                           </span>
                         </div>
-                        {a.description && <p className="text-sm text-gray-500 mt-1 line-clamp-2">{a.description}</p>}
-                        <div className="flex flex-wrap items-center gap-4 mt-2 text-xs text-gray-400">
+                        {a.description && <p className="text-sm text-white/70 mt-1 line-clamp-2">{a.description}</p>}
+                        <div className="flex flex-wrap items-center gap-4 mt-2 text-xs text-white/60">
                           <span className="flex items-center gap-1">
                             <Calendar size={12} />
                             {fmt(a.date_debut)}
@@ -201,8 +201,8 @@ export default function Activites() {
                     </div>
                     {isAdmin && (
                       <div className="flex gap-1 flex-shrink-0">
-                        <button onClick={() => openEdit(a)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><Pencil size={15} /></button>
-                        <button onClick={() => setDeleteTarget(a)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 size={15} /></button>
+                        <button onClick={() => openEdit(a)} className="p-1.5 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-colors"><Pencil size={15} /></button>
+                        <button onClick={() => setDeleteTarget(a)} className="p-1.5 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"><Trash2 size={15} /></button>
                       </div>
                     )}
                   </div>
