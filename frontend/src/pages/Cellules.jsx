@@ -3,7 +3,7 @@ import { getCellules, getCellule, createCellule, updateCellule, deleteCellule, g
 import Loader from "../components/Loader"
 import ConfirmModal from "../components/ConfirmModal"
 import toast from "react-hot-toast"
-import { Plus, Edit2, Trash2, Building2, X, Search, Users, MapPin, CheckCircle2 } from "lucide-react"
+import { Plus, Edit2, Trash2, Building2, X, Search, Users, MapPin, CheckCircle2, Eye } from "lucide-react"
 
 const EMPTY_FORM = { nom_cellule: "", description: "", quartier: "", commune: "", departement: "Tambacounda", actif: true, responsable: null }
 const EMPTY_RESPONSABLE = { nom: "", prenom: "", telephone: "", quartier: "" }
@@ -22,6 +22,10 @@ export default function Cellules() {
   const [search, setSearch] = useState("")
   const [hasResponsable, setHasResponsable] = useState(false)
   const [responsableData, setResponsableData] = useState(EMPTY_RESPONSABLE)
+  const [showMembresModal, setShowMembresModal] = useState(false)
+  const [selectedCelluleMembres, setSelectedCelluleMembres] = useState([])
+  const [selectedCelluleName, setSelectedCelluleName] = useState("")
+  const [loadingMembres, setLoadingMembres] = useState(false)
 
   const fetchResponsables = useCallback(async () => {
     try {
@@ -113,6 +117,20 @@ export default function Cellules() {
       setDeleteTarget(null)
       fetchCellules()
     } catch { toast.error("Erreur lors de la suppression") }
+  }
+
+  const handleViewMembres = async (cellule) => {
+    setLoadingMembres(true)
+    setSelectedCelluleName(cellule.nom_cellule)
+    try {
+      const { data } = await getMembres({ cellule: cellule.id, page_size: 100 })
+      setSelectedCelluleMembres(Array.isArray(data) ? data : (data.results || []))
+      setShowMembresModal(true)
+    } catch (err) {
+      toast.error("Erreur lors du chargement des membres")
+    } finally {
+      setLoadingMembres(false)
+    }
   }
 
   const totalMembres = cellules.reduce((acc, c) => acc + (c.nombre_membres || 0), 0)
@@ -220,7 +238,8 @@ export default function Cellules() {
                     <Users size={11} />
                     {c.nombre_membres || 0} membre{c.nombre_membres !== 1 ? "s" : ""}
                   </span>
-                  <div className="flex gap-1 sm:hidden">
+                  <div className="flex gap-1">
+                    <button onClick={() => handleViewMembres(c)} className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Voir les membres"><Eye size={15} /></button>
                     <button onClick={() => openEdit(c)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><Edit2 size={15} /></button>
                     <button onClick={() => setDeleteTarget(c)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 size={15} /></button>
                   </div>
@@ -332,6 +351,57 @@ export default function Cellules() {
           onConfirm={handleDelete}
           onCancel={() => setDeleteTarget(null)}
         />
+      )}
+
+      {showMembresModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-white/15" style={{backgroundColor:'rgba(10,20,15,0.97)'}}>
+            <div className="bg-gradient-to-r from-emerald-600 to-green-600 rounded-t-2xl p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"><Users size={20} className="text-white" /></div>
+                  <div>
+                    <h2 className="text-white font-bold text-lg">Membres de {selectedCelluleName}</h2>
+                    <p className="text-green-100 text-xs">{selectedCelluleMembres.length} membre{selectedCelluleMembres.length !== 1 ? "s" : ""}</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowMembresModal(false)} className="text-white/70 hover:text-white"><X size={20} /></button>
+              </div>
+            </div>
+            <div className="p-6">
+              {loadingMembres ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : selectedCelluleMembres.length === 0 ? (
+                <div className="text-center py-8">
+                  <Users size={40} className="mx-auto mb-3 text-gray-400" />
+                  <p className="text-gray-400">Aucun membre dans cette cellule</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {selectedCelluleMembres.map((membre) => (
+                    <div key={membre.id} className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-white font-bold text-lg">{membre.nom ? membre.nom[0] : "?"}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-white font-semibold truncate">{membre.nom} {membre.prenom}</h3>
+                        <p className="text-gray-400 text-sm">{membre.telephone || "Pas de téléphone"}</p>
+                        {membre.quartier && (
+                          <p className="text-gray-500 text-xs mt-0.5">{membre.quartier}</p>
+                        )}
+                      </div>
+                      <span className={"inline-flex items-center px-2 py-1 rounded-full text-xs font-medium " + (membre.actif ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400")}>
+                        {membre.actif ? "Actif" : "Inactif"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
